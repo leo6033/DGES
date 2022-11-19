@@ -1,0 +1,9 @@
+{
+    "name": "com.disc0ver.game_event_system",
+    "displayName": "DGES",
+    "version": "1.0.0",
+    "unity": "2020.3",
+    "description": "游戏通用事件系统",
+    "keywords": ["unity", "EventSystem"],
+    "category": "Unity"
+}
