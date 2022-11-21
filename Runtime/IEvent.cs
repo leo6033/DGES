@@ -1,7 +1,12 @@
 ﻿
+using System;
+
 namespace Disc0ver.Event
 {
-    public interface IBaseEvent { }
+    public interface IBaseEvent
+    {
+        public abstract Type Type { get; }
+    }
 
     /// <summary>
     /// 事件接口，T 为事件类型
