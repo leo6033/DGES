@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Disc0ver.Event
@@ -16,7 +17,7 @@ namespace Disc0ver.Event
     /// <example>
     /// <code>  class A: IEventListener&lt;EventA&gt;  IEventListener&lt;EventB&gt; </code>
     /// </example>
-    public interface IEventListener<in TEvent> : IBaseEventListener where TEvent: struct, IBaseEvent
+    public interface IEventListener<in TEvent> : IBaseEventListener where TEvent: IBaseEvent
     {
         /// <summary>
         /// 接收到事件消息时的处理函数
@@ -34,7 +35,7 @@ namespace Disc0ver.Event
         /// <summary>
         /// 监听的事件
         /// </summary>
-        public abstract List<IBaseEvent> ListenEvents { get; }
+        public abstract List<Type> ListenEvents { get; }
 
         /// <summary>
         /// 接收到事件消息时的处理函数
