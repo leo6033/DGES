@@ -1,8 +1,5 @@
 using Disc0ver.Event;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public enum GameStage
 {
@@ -16,12 +13,14 @@ public abstract class AGameStageEvent : IEvent<GameStage>
     public Type Type => GetType();
 }
 
+[EventId(nameof(GameStage.GameStart))]
 public class GameStartEvent: AGameStageEvent
 {
     public override GameStage EventType => GameStage.GameStart;
     public string startMessage;
 }
 
+[EventId(nameof(GameStage.GameEnd))]
 public class GameEndEvent : AGameStageEvent
 {
     public override GameStage EventType => GameStage.GameEnd;

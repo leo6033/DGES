@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Disc0ver.Event
 {
@@ -8,6 +10,7 @@ namespace Disc0ver.Event
     /// </summary>
     public abstract class AEventManager
     {
+        private readonly Dictionary<string, Type> _eventDict = new Dictionary<string, Type>();
         private readonly Dictionary<Type, List<IBaseEventListener>> _eventSubscriptDict = new Dictionary<Type, List<IBaseEventListener>>();
 
         public void AddListener<TEvent>(IBaseEventListener eventListener) where TEvent: IBaseEvent
@@ -62,6 +65,33 @@ namespace Disc0ver.Event
             }
         }
         
+        public void RegisterEvents()
+        {
+            var typesWithEventIdAttribute =
+                // Note the AsParallel here, this will parallelize everything after.
+                from a in AppDomain.CurrentDomain.GetAssemblies().AsParallel()
+                from t in a.GetTypes()
+                where t.IsDefined(typeof(EventIdAttribute), false)
+                select t;
+
+            foreach (var type in typesWithEventIdAttribute)
+            {
+                EventIdAttribute attribute = type.GetCustomAttribute<EventIdAttribute>();
+                if(attribute == null)
+                    continue;
+                _eventDict.Add(attribute.value, type);
+            }
+        }
+
+        public Type GetEventType(string eventId)
+        {
+            if (_eventDict.TryGetValue(eventId, out Type type))
+            {
+                return type;
+            }
+
+            return null;
+        }
     }
 
     /// <summary>
@@ -72,5 +102,10 @@ namespace Disc0ver.Event
         private static EventManager _instance;
 
         public static EventManager Instance => _instance ??= new EventManager();
+
+        public EventManager()
+        {
+            RegisterEvents();
+        }
     }
 }

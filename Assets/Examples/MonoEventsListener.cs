@@ -6,15 +6,24 @@ using UnityEngine;
 
 public class MonoEventsListener : MonoBehaviour, IEventsListener
 {
-    public List<Type> ListenEvents => _listenEvents;
+    public List<Type> ListenEvents => _eventId;
 
-    [SerializeReference] private List<Type> _listenEvents;
+    private List<Type> _eventId;
+
+    [SerializeReference] private List<GameStage> _listenEvents;
 
     private void OnEnable()
     {
-        _listenEvents = new List<Type>();
-        _listenEvents.Add(typeof(GameStartEvent));
-        foreach (var type in _listenEvents)
+        _eventId = new List<Type>();
+
+        foreach (var stage in _listenEvents)
+        {
+            Type type = EventManager.Instance.GetEventType(stage.ToString());
+            if(type != null)
+                _eventId.Add(type);
+        }
+        
+        foreach (var type in ListenEvents)
         {
             EventManager.Instance.AddListener(type, this);
         }
